@@ -1,15 +1,13 @@
 let books = [];
 let menus = document.querySelectorAll(".menus button");
 let summary = '';
+let url = '';
 
 menus.forEach((menu) => menu.addEventListener("click", (event) => getBooksBySubject(event)));
 
 let searchButton = document.getElementById("search-button");
-console.log("버튼은?", searchButton);
 
-
-const getBookLists = async () => {
-    let url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:business&startIndex=0&filter=full`);
+const getBooks = async () => {
     let response = await fetch(url);
 
     let data = await response.json();
@@ -19,31 +17,28 @@ const getBookLists = async () => {
     render();
 }
 
+
+const getBookLists = async () => {
+    url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:business&startIndex=0&filter=full`);
+    getBooks();
+}
+
 const getBooksBySubject = async (event) => {
 
     let subject = event.target.textContent.toLowerCase();
-    let url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:${subject}&startIndex=0&filter=full`);
-
-    let response = await fetch(url);
-    let data = await response.json();
-
-    books = data.items;
-
-    render();
+    url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:${subject}&startIndex=0&filter=full`);
+    getBooks();
 }
+
 
 const getBooksByKeyword = async () => {
     //검색한 Keyword를 가지고 옴
     let keyword = document.getElementById("input-text").value;
 
-    let url = new URL(`https://www.googleapis.com/books/v1/volumes?q=${keyword}&startIndex=0&filter=full`);
-    let response = await fetch(url);
-
-    let data = await response.json();
-    books = data.items;
-
-    render();
+    url = new URL(`https://www.googleapis.com/books/v1/volumes?q=${keyword}&startIndex=0&filter=full`);
+    getBooks();
 }
+
 
 const render = () => {
     let booksHTML = ``;
