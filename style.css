@@ -1,0 +1,82 @@
+.head-line{
+    margin-top: 2em;
+    margin-bottom: 2em;
+    display: flex;
+    justify-content: center;
+}
+
+.search-area{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2em;
+}
+
+::placeholder{
+    color:#2E9AFE;
+}
+
+#input-text{
+    text-indent: 2%;
+    width: 600px;
+    height: 40px;
+    border: 2px solid #2E9AFE;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+    border-bottom-right-radius: 70px;
+    border-bottom-left-radius: 70px;
+    
+}
+
+#search-button{
+    margin-left: 0.3em;
+    color: white;
+    width:70px;
+    height: 40px;
+    background-color: #2E9AFE;
+    border: 2px solid #2E9AFE;
+    border-radius: 5px;
+}
+
+.menus{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top: 1px solid #2E9AFE;
+    border-bottom: 3px double #2E9AFE;
+    
+}
+
+.menus button {
+    border: none;
+    background: none;
+    margin: 3px;
+}
+
+.service-logo{
+    width: 300px;
+}
+
+.books-img-size{
+
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.row{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.col-lg-3{
+    display: flex;
+    justify-content: center;
+}
+
+.books{
+    border-bottom: 2px solid #2E9AFE;
+}
+
+.col-lg-9{
+    margin-bottom: 1em;
+}
