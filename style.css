@@ -80,3 +80,8 @@
 .col-lg-9{
     margin-bottom: 1em;
 }
+
+.pagination{
+    display: flex;
+    justify-content: center;
+}

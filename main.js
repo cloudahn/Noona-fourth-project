@@ -4,6 +4,7 @@ let summary = '';
 let url = '';
 let booksHTML = '';
 let call_index = 0;
+let max_return = -1;
 
 //pagination 관련 전역변수
 let total_items = 0; //검색 된 전체 건수
@@ -23,21 +24,33 @@ const getBooks = async () => {
     try{
       
         url.searchParams.set("startIndex", call_index); // 원하는 페이지의 index 값을 파라메터로 넣는다. &startIndex=
-
+        url.searchParams.set("langRestrict", "en");
         let response = await fetch(url);
         let data = await response.json();
-        console.log(data);
-        total_items = data.totalItems; //검색 된 전체 건수를 total_page 입력
+        //console.log("요청한퀘리: ",url.href);
+        total_items = data.totalItems;
+        //console.log(data);
+        //구글 API 키워드 검색 결과 리터값 오류로 인해 최초 리턴된 검색 건수를 Fix 시킴
+        if (max_return == -1){
+            max_return = data.totalItems
+        } else{
+            if (max_return <= total_items){
+                total_items = max_return;
+            }
+        }
+         //검색 된 전체 건수를 total_page 입력
         total_pages = Math.ceil(total_items/10);
         current_page_group = Math.ceil(current_page/5) //현재페이지가 속해있는 페이지 그룹
 
         if(response.status == 200){
             //검색 된 결과가 없을 경우 결과 없음을 출력
             if(total_items == 0){
+                //console.log("here");
                 throw new Error("검색 된 결과값이 없습니다!!!");
+                
             }else{
                 books = data.items;
-                console.log("books data는: ", books);
+                //console.log("books data는: ", books);
                 render();
                 pagination();
             }
@@ -51,7 +64,8 @@ const getBooks = async () => {
         }
         
     }catch(error){
-        console.log("잡힌 에러 : ", error.message);
+        //console.log("잡힌 에러 : ", error.message);
+        document.querySelector(".pagination").innerHTML = '';
         errorRender(error.message);
     }
     
@@ -63,11 +77,18 @@ const getBookLists = async () => {
     getBooks();
 }
 
+const resetPaging = () => {
+    call_index = 0;
+    current_page = 1;
+    max_return = -1;
+}
+
 const getBooksBySubject = async (event) => {
     //클릭한 Subject 정보를 가지고 옴
     let subject = event.target.textContent.toLowerCase();
-
+    resetPaging();
     url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:${subject}&filter=full`);
+
     getBooks();
 }
 
@@ -75,6 +96,7 @@ const getBooksBySubject = async (event) => {
 const getBooksByKeyword = async () => {
     //검색한 Keyword를 가지고 옴
     let keyword = document.getElementById("input-text").value;
+    resetPaging();
 
     url = new URL(`https://www.googleapis.com/books/v1/volumes?q=${keyword}&filter=full`);
     getBooks();
@@ -152,11 +174,15 @@ const pagination = () => {
             last_page = current_page_group * 5;
             first_page = last_page - 4;
         }
-        console.log("현재페이지 그룹 : ", current_page_group);
-        console.log("현재 페이지 : ",current_page);
-        console.log("첫번째 페이지 : ", first_page);
-        console.log("마지막 페이지 : ", last_page);
+
     }
+    // console.log("요청한 URL : ", url.href);
+    // console.log("전체건수 : ",total_items);
+    // console.log("전체페이지 수 : ", total_pages);
+    // console.log("현재페이지 그룹 : ", current_page_group);
+    // console.log("현재 페이지 : ",current_page);
+    // console.log("첫번째 페이지 : ", first_page);
+    // console.log("마지막 페이지 : ", last_page);
    
     /// 실제로 pagination 을 하는 부분
 
@@ -201,7 +227,7 @@ const pagination = () => {
 }
 
 const moveToPage = (pageNum) => {
-    console.log("moveToPage 호출 됨 + page 값은 :", pageNum);
+    //console.log("moveToPage 호출 됨 + page 값은 :", pageNum);
     call_index = pageNum-1; //이동하고자 하는 페이지를 startIndex(Index 이므로 페이지에 -1을 한다)파라메터로 변환해서 넘긴다
     current_page = pageNum;
     getBooks();
