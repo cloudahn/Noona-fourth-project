@@ -34,14 +34,14 @@ const getBooks = async () => {
         if (max_return == -1){
             max_return = data.totalItems
         } else{
-            if (max_return <= total_items){
+            if (max_return != total_items){
                 total_items = max_return;
             }
         }
          //검색 된 전체 건수를 total_page 입력
         total_pages = Math.ceil(total_items/10);
         current_page_group = Math.ceil(current_page/5) //현재페이지가 속해있는 페이지 그룹
-
+        
         if(response.status == 200){
             //검색 된 결과가 없을 경우 결과 없음을 출력
             if(total_items == 0){    
@@ -86,7 +86,7 @@ const getBooksBySubject = async (event) => {
     let subject = event.target.textContent.toLowerCase();
     resetPaging();
     url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:${subject}&filter=full`);
-
+    document.getElementById("input-text").value = '';
     getBooks();
 }
 
@@ -174,7 +174,6 @@ const pagination = () => {
         }
 
     }
-    
    
     /// 실제로 pagination 을 하는 부분
 
@@ -196,6 +195,7 @@ const pagination = () => {
     }
 
     for (let i = first_page; i <= last_page; i++ ){
+        
         paginationHTML += `<li class="page-item"><a class="page-link ${(current_page)==i?"active":""}" href="#" onclick="moveToPage(${i})">${i}</a></li>`
     }
 
