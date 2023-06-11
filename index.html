@@ -21,7 +21,8 @@
                     loading="eager" alt="Google  Books review">
             </div>
             <div class="search-area">
-                <input id="input-text" type="text" placeholder="Type Keyword!!!"/>
+                <!--Input 박스에서 엔터 키 입력시 keyword로 검색 가능-->
+                <input id="input-text" type="text" placeholder="Type Keyword!!!" onkeyup="if(window.event.keyCode==13){getBooksByKeyword()}"/>
                 <button id="search-button">Search</button>
             </div>
             <div class="menus">
@@ -29,14 +30,15 @@
                 <button type="button" class="btn btn-outline-primary">Fiction</button>
                 <button type="button" class="btn btn-outline-primary">Science</button>
                 <button type="button" class="btn btn-outline-primary">Business</button>
-                <button type="button" class="btn btn-outline-primary">ICT</button>
+                <button type="button" class="btn btn-outline-primary">Politics</button>
                 <button type="button" class="btn btn-outline-primary">Poem</button>
                 <button type="button" class="btn btn-outline-primary">Children</button>
                 <button type="button" class="btn btn-outline-primary">Finance</button>
-                <button type="button" class="btn btn-outline-primary">Magazine</button>
+                <button type="button" class="btn btn-outline-primary">Arts</button>
                 <button type="button" class="btn btn-outline-primary">Food</button>
-                <button type="button" class="btn btn-outline-primary">Beauty</button>
+                <button type="button" class="btn btn-outline-primary">Sports</button>
                 <button type="button" class="btn btn-outline-primary">Economics</button>
+                <button type="button" class="btn btn-outline-primary">History</button>
             </div>
         </section>
         <section id="books-board">

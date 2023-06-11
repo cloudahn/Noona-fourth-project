@@ -2,19 +2,40 @@ let books = [];
 let menus = document.querySelectorAll(".menus button");
 let summary = '';
 let url = '';
+let booksHTML = '';
 
 menus.forEach((menu) => menu.addEventListener("click", (event) => getBooksBySubject(event)));
 
 let searchButton = document.getElementById("search-button");
 
 const getBooks = async () => {
-    let response = await fetch(url);
-
-    let data = await response.json();
-    console.log(data);
-    books = data.items;
-
-    render();
+    try{
+      
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log("서버응답값은?", response.status);
+        if(response.status == 200){
+            if(data.totalItems == 0){
+                throw new Error("검색 된 결과값이 없습니다!!!");
+            }else{
+                books = data.items;
+                console.log("data는: ", books);
+                render();
+            }
+        }else{
+            //검색 창에 아무것도 입력하지 않고 Search 를 할경우
+            if(response.status == 400){
+                throw new Error("검색어를 입력하세요!!!");
+            } else{
+            throw new Error(data.message);
+            }
+        }
+        
+    }catch(error){
+        console.log("잡힌 에러 : ", error.message);
+        errorRender(error.message);
+    }
+    
 }
 
 
@@ -26,6 +47,7 @@ const getBookLists = async () => {
 const getBooksBySubject = async (event) => {
 
     let subject = event.target.textContent.toLowerCase();
+
     url = new URL(`https://www.googleapis.com/books/v1/volumes?q=subject:${subject}&startIndex=0&filter=full`);
     getBooks();
 }
@@ -41,7 +63,7 @@ const getBooksByKeyword = async () => {
 
 
 const render = () => {
-    let booksHTML = ``;
+    //let booksHTML = ``;
     booksHTML = books.map(books=>{
         // 해당 책에 description 이 있는지 확인
         if (books.volumeInfo.description == null){
@@ -79,6 +101,13 @@ const render = () => {
     }).join('');
 
     document.getElementById("books-board").innerHTML = booksHTML;
+}
+
+const errorRender = (message) => {
+    let errorHTML = `<div class="alert alert-primary text-center" role="alert">
+    ${message}
+  </div>`;
+    document.getElementById("books-board").innerHTML = errorHTML;
 }
 
 searchButton.addEventListener("click", getBooksByKeyword);
