@@ -13,7 +13,7 @@ let total_page_groups = 0; // Pagination 을 위한 전체 페이지 그룹(/5)
 let current_page_group = 1; //현재 화면의 페이지가 속한 페이지 그룹
 let first_page = 1 // 현재 그룹의 첫번째 페이지
 let last_page = 0; // 현재 그룹의 마지막 페이지
-let current_page = 1;
+let current_page = 1; //현재 페이지의 그룹 번호
 
 
 menus.forEach((menu) => menu.addEventListener("click", (event) => getBooksBySubject(event)));
@@ -27,9 +27,9 @@ const getBooks = async () => {
         url.searchParams.set("langRestrict", "en");
         let response = await fetch(url);
         let data = await response.json();
-        //console.log("요청한퀘리: ",url.href);
+        
         total_items = data.totalItems;
-        //console.log(data);
+        
         //구글 API 키워드 검색 결과 리터값 오류로 인해 최초 리턴된 검색 건수를 Fix 시킴
         if (max_return == -1){
             max_return = data.totalItems
@@ -44,13 +44,11 @@ const getBooks = async () => {
 
         if(response.status == 200){
             //검색 된 결과가 없을 경우 결과 없음을 출력
-            if(total_items == 0){
-                //console.log("here");
+            if(total_items == 0){    
                 throw new Error("검색 된 결과값이 없습니다!!!");
-                
+         
             }else{
                 books = data.items;
-                //console.log("books data는: ", books);
                 render();
                 pagination();
             }
@@ -64,7 +62,7 @@ const getBooks = async () => {
         }
         
     }catch(error){
-        //console.log("잡힌 에러 : ", error.message);
+        
         document.querySelector(".pagination").innerHTML = '';
         errorRender(error.message);
     }
@@ -104,7 +102,7 @@ const getBooksByKeyword = async () => {
 
 
 const render = () => {
-    //let booksHTML = ``;
+    
     booksHTML = books.map(books=>{
         // 해당 책에 description 정보가 있는지 확인 
         if (books.volumeInfo.description == null){
@@ -176,13 +174,7 @@ const pagination = () => {
         }
 
     }
-    // console.log("요청한 URL : ", url.href);
-    // console.log("전체건수 : ",total_items);
-    // console.log("전체페이지 수 : ", total_pages);
-    // console.log("현재페이지 그룹 : ", current_page_group);
-    // console.log("현재 페이지 : ",current_page);
-    // console.log("첫번째 페이지 : ", first_page);
-    // console.log("마지막 페이지 : ", last_page);
+    
    
     /// 실제로 pagination 을 하는 부분
 
@@ -193,7 +185,7 @@ const pagination = () => {
         </a>
       </li>`;
       
-        // 내가 그룹1 일때 << < 이 없어야 한다.
+      // 내가 그룹1 일때 << < 이 없어야 한다.
       // 마지막 그룹일떄 >> > 이 없어야 한다.
   
         paginationHTML += ` <li class="page-item">
@@ -227,7 +219,7 @@ const pagination = () => {
 }
 
 const moveToPage = (pageNum) => {
-    //console.log("moveToPage 호출 됨 + page 값은 :", pageNum);
+    
     call_index = pageNum-1; //이동하고자 하는 페이지를 startIndex(Index 이므로 페이지에 -1을 한다)파라메터로 변환해서 넘긴다
     current_page = pageNum;
     getBooks();
